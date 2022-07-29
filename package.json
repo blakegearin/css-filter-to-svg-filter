@@ -1,0 +1,33 @@
+{
+  "name": "css-filter-to-svg-filter",
+  "version": "0.0.1",
+  "description": "Converts CSS filters to SVG filters",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "keywords": [
+    "css-filter-to-svg-filter",
+    "css",
+    "svg",
+    "filter",
+    "color",
+    "convert"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/blakegearin/css-filter-to-svg-filter.git"
+  },
+  "bugs": "https://github.com/blakegearin/css-filter-to-svg-filter/issues",
+  "author": {
+    "name": "Blake Gearin",
+    "email": "blakegearin@pm.me",
+    "url": "https://blakegearin.com"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "mocha": "^10.0.0"
+  },
+  "dependencies": {}
+}
