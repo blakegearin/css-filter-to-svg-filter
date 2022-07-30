@@ -8,9 +8,9 @@ Import: `import CSSFilterToSVGFilter from 'css-filter-to-svg-filter';`
 
 ## Usage
 
-### Constructor - `new CSSFilterToSVGFilter()`
+### Constructor
 
-Use to start the conversion.
+Use the constructor method `new CSSFilterToSVGFilter()` to start the conversion.
 
 ```javascript
 const cssFilter = 'filter: invert(50%);';
@@ -19,8 +19,6 @@ const converter = new CSSFilterToSVGFilter(cssFilter);
 // With optional parameters
 const params = {
   filterId: 'greatId',
-  includeBlur: true,
-  includeDropShadow: true,
 };
 const customConverter = new CSSFilterToSVGFilter(cssFilter, params);
 ```
@@ -37,9 +35,9 @@ const customConverter = new CSSFilterToSVGFilter(cssFilter, params);
 |`includeBlur`      |`false`|
 |`includeDropShadow`|`false`|
 
-### Generate SVG File - `toSVG()`
+### Generate SVG File
 
-Use to convert and generate a string of an SVG containing a single filter.
+Use the `toSVG()` method to convert and generate a string of an SVG containing a single filter.
 
 ```javascript
 const cssFilter = 'filter: invert(50%);';
@@ -65,9 +63,9 @@ console.log(customSVG);
 |`attributes`        |`width="100%" height="100%"`|
 |`svgFilter`         |`this.toSVGFilter()`        |
 
-### Generate SVG Filter - `toSVGFilter()`
+### Generate SVG Filter
 
-Use to convert and generate a string of an SVG filter.
+Use the `toSVGFilter()` method to convert and generate a string of an SVG filter.
 
 ```javascript
 const cssFilter = 'filter: invert(50%);';
@@ -94,9 +92,9 @@ console.log(customSVGFilter);
 |`attributes`        |`color-interpolation-filters="sRGB"`     |
 |`svgFilterFunctions`|`Object.values(this.toSVGFilterObject())`|
 
-### Generate SVG Filter Object - `toSVGFilterObject()`
+### Generate SVG Filter Object
 
-Use to convert and generate an SVG filter as an object.
+Use the `toSVGFilterObject()` method to convert and generate an SVG filter as an object.
 
 ```javascript
 const cssFilter = 'filter: invert(50%);';
@@ -114,9 +112,9 @@ console.log(svgFilterObject);
 |-----------------|--------------------------|
 |`cssFilterObject`|`this.toCSSFilterObject()`|
 
-### Generate CSS Filter Object - `toCSSFilterObject()`
+### Generate CSS Filter Object
 
-Use to convert CSS filter to an object.
+Use the `toCSSFilterObject()` method to convert CSS filter to an object.
 
 ```javascript
 const cssFilter = 'filter: invert(50%);';
@@ -130,12 +128,16 @@ console.log(cssFilterObject);
 
 **Optional parameters:** none
 
-### SVG Filter Templates - `SVG_FILTER_TEMPLATES`
+### SVG Filter Templates
 
-A static object containing the generalized SVG filters.
+Use the static property `SVG_FILTER_TEMPLATES` to view the generalized SVG filters.
 
 ```javascript
 const svgFilterTemplates = CSSFilterToSVGFilter.SVG_FILTER_TEMPLATES;
+
+const invertSVGFilterTemplate = CSSFilterToSVGFilter.SVG_FILTER_TEMPLATES['invert']['template'];
+console.log(invertSVGFilterTemplate);
+// <feComponentTransfer><feFuncR type="table" tableValues="[amount] [1 - amount]"/><feFuncG type="table" tableValues="[amount] [1 - amount]"/><feFuncB type="table" tableValues="[amount] [1 - amount]"/></feComponentTransfer>'
 ```
 
 ### CSS Filter
@@ -143,9 +145,9 @@ const svgFilterTemplates = CSSFilterToSVGFilter.SVG_FILTER_TEMPLATES;
 |Filter Functions|Supported|
 |----------------|:-------:|
 |`brightness`    |✅       |
-|`blur`          |❌       |
+|`blur`          |🟡       |
 |`contrast`      |✅       |
-|`drop-shadow`   |❌       |
+|`drop-shadow`   |🟡       |
 |`grayscale`     |✅       |
 |`hue-rotate`    |✅       |
 |`invert`        |✅       |
@@ -153,11 +155,29 @@ const svgFilterTemplates = CSSFilterToSVGFilter.SVG_FILTER_TEMPLATES;
 |`saturate`      |✅       |
 |`sepia`         |✅       |
 
-#### Why no `blur` and `drop-shadow`?
+#### Why are `blur` and `drop-shadow` different?
 
-These don't have first-class support because the SVG filter function templates require several inputs, some of which do not line up directly between CSS and SVG. The SVG filter function templates for these are still included in `SVG_FILTER_TEMPLATES` for convenience.
+These don't have first-class support because the SVG filter function templates require several inputs which cannot easily be parsed from a CSS filter. By default blur and drop shadows will be ignored.
 
-By default these will be excluded, but the exclusion can be disabled by using the optional parameters `includeBlur` and `includeDropShadow`. Though please keep in mind they will be included without value replacement (e.g. `[radius]`). Unless values like this are replaced, the filter won't function properly.
+However, you can still generate SVG filter functions for these by manually passing the inputs as an object to the [constructor](#constructor).
+
+```javascript
+const cssFilter = 'filter: invert(50%);';
+const params = {
+  blur: {
+    radius: '',
+    edgeMode: '',
+  },
+  dropShadow:{
+    alphaChannelOfInput: '',
+    radius: '',
+    offsetX: '',
+    offsetY: '',
+    color: '',
+  },
+};
+const customConverter = new CSSFilterToSVGFilter(cssFilter, params);
+```
 
 ## Links/Resources
 

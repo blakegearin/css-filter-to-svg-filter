@@ -87,17 +87,9 @@ describe('CSSFilterToSVGFilter', function () {
       )
     })
 
-    it('should have child objects as values', function () {
-      const childObject = Object.values(CSSFilterToSVGFilter.SVG_FILTER_TEMPLATES)[0]
-
-      assert.equal(typeof childObject, 'object')
-    })
-
-    describe('child objects', function () {
-      it('should have a template key', function () {
-        const childObject = Object.values(CSSFilterToSVGFilter.SVG_FILTER_TEMPLATES)[0]
-
-        assert.equal(Object.keys(childObject).includes('template'), true)
+    it('should have functions as values', function () {
+      Object.values(CSSFilterToSVGFilter.SVG_FILTER_TEMPLATES).forEach((childObject) => {
+        assert.equal(typeof childObject, 'function')
       })
     })
   })
@@ -225,104 +217,129 @@ describe('CSSFilterToSVGFilter', function () {
         })
       })
 
-      describe('when blur filter function is included', function () {
-        const cssFilter = 'filter: function(100) blur(5px);'
+      describe('optional class parameter blur', function () {
+        const key = 'blur'
+        const cssFilterFunction = key
 
-        describe('optional class parameter includeBlur', function () {
-          describe('when not provided', function () {
+        describe('when not provided', function () {
+          beforeEach(function () {
+            cssFilterToSVGFilter = new CSSFilterToSVGFilter(cssFilter)
+          })
+
+          describe(`when ${cssFilterFunction} filter function is not included`, function () {
+            const cssFilter = 'filter: function(100)'
+
             beforeEach(function () {
               cssFilterToSVGFilter = new CSSFilterToSVGFilter(cssFilter)
             })
 
-            it('should default to false', function () {
-              assert.equal(cssFilterToSVGFilter.includeBlur, false)
+            it(`should not have ${key} as key`, function () {
+              const cssFilterObject = cssFilterToSVGFilter.toCSSFilterObject()
+
+              assert.equal(Object.keys(cssFilterObject).includes(key), false)
             })
           })
 
-          describe('when false', function () {
-            const includeBlur = false
+          describe(`when ${cssFilterFunction} filter function is included`, function () {
+            const cssFilter = 'filter: function(100) blur(5px);'
 
             beforeEach(function () {
-              cssFilterToSVGFilter = new CSSFilterToSVGFilter(cssFilter, { includeBlur })
+              cssFilterToSVGFilter = new CSSFilterToSVGFilter(cssFilter)
             })
 
-            it('should not have blur as key', function () {
+            it(`should not have ${key} as key`, function () {
               const cssFilterObject = cssFilterToSVGFilter.toCSSFilterObject()
 
-              assert.equal(Object.keys(cssFilterObject).includes('blur'), false)
+              console.log(`cssFilterObject`);
+              console.dir(cssFilterObject);
+
+              assert.equal(Object.keys(cssFilterObject).includes(key), false)
             })
           })
+        })
 
-          describe('when true', function () {
-            const includeBlur = true
+        describe('when provided', function () {
+          const blur = {
+            radius: 10,
+            edgeMode: 'none'
+          }
 
-            beforeEach(function () {
-              cssFilterToSVGFilter = new CSSFilterToSVGFilter(cssFilter, { includeBlur })
-            })
+          beforeEach(function () {
+            cssFilterToSVGFilter = new CSSFilterToSVGFilter(cssFilter, { blur })
+          })
 
-            it('should have blur as key', function () {
-              const cssFilterObject = cssFilterToSVGFilter.toCSSFilterObject()
+          it(`should have ${key} as key`, function () {
+            const cssFilterObject = cssFilterToSVGFilter.toCSSFilterObject()
 
-              assert.equal(Object.keys(cssFilterObject).includes('blur'), true)
-            })
+            assert.equal(Object.keys(cssFilterObject).includes(key), true)
+          })
 
-            it('should have child object with processed key equal to original key', function () {
-              const cssFilterObject = cssFilterToSVGFilter.toCSSFilterObject()
-              const childObject = cssFilterObject.blur
+          it(`should have ${key} key with value equal to parameter`, function () {
+            const cssFilterObject = cssFilterToSVGFilter.toCSSFilterObject()
 
-              assert.equal(childObject.processed, childObject.original)
-            })
+            assert.equal(cssFilterObject.blur, blur)
           })
         })
       })
 
-      describe('when drop-shadow filter function is included', function () {
-        const cssFilter = 'filter: function(100) drop-shadow(5px 2px 2px #424242);'
+      describe('optional class parameter dropShadow', function () {
+        const key = 'dropShadow'
+        const cssFilterFunction = 'drop-shadow'
 
-        describe('optional class parameter includeDropShadow', function () {
-          describe('when not provided', function () {
+        describe('when not provided', function () {
+          beforeEach(function () {
+            cssFilterToSVGFilter = new CSSFilterToSVGFilter(cssFilter)
+          })
+
+          describe(`when ${cssFilterFunction} filter function is not included`, function () {
+            const cssFilter = 'filter: function(100)'
+
             beforeEach(function () {
               cssFilterToSVGFilter = new CSSFilterToSVGFilter(cssFilter)
             })
 
-            it('should default to false', function () {
-              assert.equal(cssFilterToSVGFilter.includeDropShadow, false)
+            it('should not have dropShadow as key', function () {
+              const cssFilterObject = cssFilterToSVGFilter.toCSSFilterObject()
+
+              assert.equal(Object.keys(cssFilterObject).includes(key), false)
             })
           })
 
-          describe('when false', function () {
-            const includeDropShadow = false
+          describe(`when ${cssFilterFunction} filter function is included`, function () {
+            const cssFilter = 'filter: function(100) blur(5px);'
 
             beforeEach(function () {
-              cssFilterToSVGFilter = new CSSFilterToSVGFilter(cssFilter, { includeDropShadow })
+              cssFilterToSVGFilter = new CSSFilterToSVGFilter(cssFilter)
             })
 
-            it('should not have drop-shadow as key', function () {
+            it(`should not have ${key} as key`, function () {
               const cssFilterObject = cssFilterToSVGFilter.toCSSFilterObject()
 
-              assert.equal(Object.keys(cssFilterObject).includes('drop-shadow'), false)
+              assert.equal(Object.keys(cssFilterObject).includes(key), false)
             })
           })
+        })
 
-          describe('when true', function () {
-            const includeDropShadow = true
+        describe('when provided', function () {
+          const dropShadow = {
+            radius: 10,
+            edgeMode: 'none'
+          }
 
-            beforeEach(function () {
-              cssFilterToSVGFilter = new CSSFilterToSVGFilter(cssFilter, { includeDropShadow })
-            })
+          beforeEach(function () {
+            cssFilterToSVGFilter = new CSSFilterToSVGFilter(cssFilter, { dropShadow })
+          })
 
-            it('should have drop-shadow as key', function () {
-              const cssFilterObject = cssFilterToSVGFilter.toCSSFilterObject()
+          it(`should have ${key} as key`, function () {
+            const cssFilterObject = cssFilterToSVGFilter.toCSSFilterObject()
 
-              assert.equal(Object.keys(cssFilterObject).includes('drop-shadow'), true)
-            })
+            assert.equal(Object.keys(cssFilterObject).includes(key), true)
+          })
 
-            it('should have child object with processed key equal to original key', function () {
-              const cssFilterObject = cssFilterToSVGFilter.toCSSFilterObject()
-              const childObject = cssFilterObject['drop-shadow']
+          it(`should have ${key} key with value equal to parameter`, function () {
+            const cssFilterObject = cssFilterToSVGFilter.toCSSFilterObject()
 
-              assert.equal(childObject.processed, childObject.original)
-            })
+            assert.equal(cssFilterObject.dropShadow, dropShadow)
           })
         })
       })
@@ -380,10 +397,8 @@ describe('CSSFilterToSVGFilter', function () {
 
       const key = 'saturate'
       const processedValue = cssFilterObject[key].processed
-      const generalizedSVGFilterTemplate =
-        CSSFilterToSVGFilter.SVG_FILTER_TEMPLATES[key].template
       const degeneralizedSVGFilterTemplate =
-        generalizedSVGFilterTemplate.replace('[amount]', processedValue)
+        CSSFilterToSVGFilter.SVG_FILTER_TEMPLATES[key](processedValue)
 
       assert.equal(svgFilterObject[key], degeneralizedSVGFilterTemplate)
     })
@@ -585,6 +600,10 @@ describe('CSSFilterToSVGFilter', function () {
             cssFilterToSVGFilter.toSVG({ svgFilter }),
             cssFilterToSVGFilter.toSVG()
           )
+
+          const invertSVGFilterTemplate = CSSFilterToSVGFilter.SVG_FILTER_TEMPLATES['invert']['template'];
+
+          console.dir(invertSVGFilterTemplate)
         })
       })
     })
