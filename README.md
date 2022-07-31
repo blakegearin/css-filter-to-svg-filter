@@ -33,7 +33,7 @@ const customConverter = new CSSFilterToSVGFilter(cssFilter, params);
 
 **Required parameters:**
 
-- `cssFilter`, see [CSS Filter section](#css-filter) for more details
+- `cssFilter`, see [CSS Filter Support](#css-filter-support) for more details
 
 **Optional parameters:**
 
