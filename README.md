@@ -8,6 +8,14 @@ Import: `import CSSFilterToSVGFilter from 'css-filter-to-svg-filter';`
 
 ## Usage
 
+- [Constructor](#constructor)
+- [Generate SVG File](#generate-svg-file)
+- [Generate SVG Filter](#generate-svg-filter)
+- [Generate SVG Filter Object](#generate-svg-filter-object)
+- [Generate CSS Filter Object](#generate-css-filter-object)
+- [SVG Filter Templates](#svg-filter-templates)
+- [CSS Filter Support](#css-filter-support)
+
 ### Constructor
 
 Use the constructor method `new CSSFilterToSVGFilter()` to start the conversion.
@@ -16,7 +24,7 @@ Use the constructor method `new CSSFilterToSVGFilter()` to start the conversion.
 const cssFilter = 'filter: invert(50%);';
 const converter = new CSSFilterToSVGFilter(cssFilter);
 
-// With optional parameters
+// With an optional parameter
 const params = {
   filterId: 'greatId',
 };
@@ -140,7 +148,7 @@ console.log(invertSVGFilterTemplate);
 // <feComponentTransfer><feFuncR type="table" tableValues="[amount] [1 - amount]"/><feFuncG type="table" tableValues="[amount] [1 - amount]"/><feFuncB type="table" tableValues="[amount] [1 - amount]"/></feComponentTransfer>'
 ```
 
-### CSS Filter
+### CSS Filter Support
 
 |Filter Functions|Supported|
 |----------------|:-------:|
@@ -157,9 +165,7 @@ console.log(invertSVGFilterTemplate);
 
 #### Why are `blur` and `drop-shadow` different?
 
-These don't have first-class support because the SVG filter function templates require several inputs which cannot easily be parsed from a CSS filter. By default blur and drop shadows will be ignored.
-
-However, you can still generate SVG filter functions for these by manually passing the inputs as an object to the [constructor](#constructor).
+These don't have first-class support because the SVG filter function templates require several inputs which cannot easily be parsed from a CSS filter. By default `blur` and `drop-shadow` will be ignored from CSS filters. However, they can be added to an SVG filter by manually passing the inputs as parameters to the [constructor](#constructor).
 
 ```javascript
 const cssFilter = 'filter: invert(50%);';
