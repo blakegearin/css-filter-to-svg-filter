@@ -4,7 +4,7 @@
 
 Install: `$ npm install css-filter-to-svg-filter`
 
-Import: `import CSSFilterToSVGFilter from 'css-filter-to-svg-filter';`
+Import: `import CSSFilterToSVGFilter from '@blakegearin/css-filter-to-svg-filter';`
 
 ## Usage
 
@@ -37,11 +37,11 @@ const customConverter = new CSSFilterToSVGFilter(cssFilter, params);
 
 **Optional parameters:**
 
-|Name               |Default|
-|-------------------|-------|
-|`filterID`         |none   |
-|`includeBlur`      |`false`|
-|`includeDropShadow`|`false`|
+|Name        |Default|
+|------------|-------|
+|`filterID`  |none   |
+|`blur`      |none   |
+|`dropShadow`|none   |
 
 ### Generate SVG File
 
@@ -56,7 +56,7 @@ console.log(svg);
 
 // With optional parameter
 const filterId = 'greatId';
-const customSVG = new CSSFilterToSVGFilter(cssFilter).toSVG({filterId});
+const customSVG = new CSSFilterToSVGFilter(cssFilter, {filterId}).toSVG();
 
 console.log(customSVG);
 // <svg width="100%" height="100%"><filter id="greatId" color-interpolation-filters="sRGB"><feComponentTransfer><feFuncR type="table" tableValues="0.5 0.5"/><feFuncG type="table" tableValues="0.5 0.5"/><feFuncB type="table" tableValues="0.5 0.5"/></feComponentTransfer></filter></svg>

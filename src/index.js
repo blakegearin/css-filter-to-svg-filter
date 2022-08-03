@@ -1,23 +1,39 @@
 class CSSFilterToSVGFilter {
   static SVG_FILTER_TEMPLATES = {
-    blur: ({ radius, edgeMode } = {}) => {
+    blur: ({ radius, edgeMode = 'none' } = {}) => {
+      if (radius === undefined) throw new Error('Required parameter radius is undefined')
+
       return `<feGaussianBlur stdDeviation="${radius} ${radius}" edgeMode="${edgeMode}">`
     },
     brightness: (amount) => {
+      if (amount === undefined) throw new Error('Required parameter amount is undefined')
+
       const slope = amount
 
       return `<feComponentTransfer><feFuncR type="linear" slope="${slope}"/><feFuncG type="linear" slope="${slope}"/><feFuncB type="linear" slope="${slope}"/></feComponentTransfer>`
     },
     contrast: (amount) => {
+      if (amount === undefined) throw new Error('Required parameter amount is undefined')
+
       const slope = amount
       const intercept = -(0.5 * amount) + 0.5
 
       return `<feComponentTransfer><feFuncR type="linear" slope="${slope}" intercept="${intercept}"/><feFuncG type="linear" slope="${slope}" intercept="${intercept}"/><feFuncB type="linear" slope="${slope}" intercept="${intercept}"/></feComponentTransfer>`
     },
     'drop-shadow': ({ alphaChannelOfInput, radius, offsetX, offsetY, color } = {}) => {
+      if (alphaChannelOfInput === undefined) {
+        throw new Error('Required parameter alphaChannelOfInput is undefined')
+      }
+      if (radius === undefined) throw new Error('Required parameter radius is undefined')
+      if (offsetX === undefined) throw new Error('Required parameter offsetX is undefined')
+      if (offsetY === undefined) throw new Error('Required parameter offsetY is undefined')
+      if (color === undefined) throw new Error('Required parameter color is undefined')
+
       return `<feGaussianBlur in="${alphaChannelOfInput}" stdDeviation="${radius}"/><feOffset dx="${offsetX}" dy="${offsetY}" result="offsetblur"/><feFlood flood-color="${color}"/><feComposite in2="offsetblur" operator="in"/><feMerge><feMergeNode/><feMergeNode in="[input-image]"/></feMerge>`
     },
     grayscale: (amount) => {
+      if (amount === undefined) throw new Error('Required parameter amount is undefined')
+
       const value1 = 0.2126 + 0.7874 * (1 - amount)
       const value2 = 0.7152 - 0.7152 * (1 - amount)
       const value3 = 0.0722 - 0.0722 * (1 - amount)
@@ -31,20 +47,30 @@ class CSSFilterToSVGFilter {
       return `<feColorMatrix type="matrix" values="${value1} ${value2} ${value3} 0 0 ${value4} ${value5} ${value6} 0 0 ${value7} ${value8} ${value9} 0 0 0 0 0 1 0"/>`
     },
     'hue-rotate': (amount) => {
+      if (amount === undefined) throw new Error('Required parameter amount is undefined')
+
       const angle = amount
 
       return `<feColorMatrix type="hueRotate" values="${angle}"/>`
     },
     invert: (amount) => {
+      if (amount === undefined) throw new Error('Required parameter amount is undefined')
+
       return `<feComponentTransfer><feFuncR type="table" tableValues="${amount} ${1 - amount}"/><feFuncG type="table" tableValues="${amount} ${1 - amount}"/><feFuncB type="table" tableValues="${amount} ${1 - amount}"/></feComponentTransfer>`
     },
     opacity: (amount) => {
+      if (amount === undefined) throw new Error('Required parameter amount is undefined')
+
       return `<feComponentTransfer><feFuncA type="table" tableValues="0 ${amount}"/></feComponentTransfer>`
     },
     saturate: (amount) => {
+      if (amount === undefined) throw new Error('Required parameter amount is undefined')
+
       return `<feColorMatrix type="saturate" values="${amount}"/>`
     },
     sepia: (amount) => {
+      if (amount === undefined) throw new Error('Required parameter amount is undefined')
+
       const value1 = 0.393 + 0.607 * (1 - amount)
       const value2 = 0.769 - 0.769 * (1 - amount)
       const value3 = 0.189 - 0.189 * (1 - amount)
@@ -82,7 +108,7 @@ class CSSFilterToSVGFilter {
 
       result[key] = {
         original: value,
-        processed: this.#computeFilterValue(value)
+        processed: this.computeFilterValue(value)
       }
     }
 
@@ -99,10 +125,16 @@ class CSSFilterToSVGFilter {
       let input
       switch (key) {
         case 'blur':
-          if (Object.entries(this.blur).length) input = value
+          if (Object.entries(this.blur).length) {
+            input = value
+            break
+          }
           return
         case 'drop-shadow':
-          if (Object.entries(this.dropShadow).length) input = value
+          if (Object.entries(this.dropShadow).length) {
+            input = value
+            break
+          }
           return
         default:
           input = value.processed
@@ -126,7 +158,7 @@ class CSSFilterToSVGFilter {
     return `<svg${attributes}>${svgFilter}</svg>`
   }
 
-  #computeFilterValue (value) {
+  computeFilterValue (value) {
     const isPercentage = value.includes('%')
     const isDegree = value.includes('deg')
 

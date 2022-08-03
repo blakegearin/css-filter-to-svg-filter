@@ -1,9 +1,6 @@
 import assert from 'assert'
 import CSSFilterToSVGFilter from '../src/index.js'
 
-describe('', function () {
-})
-
 describe('CSSFilterToSVGFilter', function () {
   let cssFilterToSVGFilter
 
@@ -11,21 +8,13 @@ describe('CSSFilterToSVGFilter', function () {
     describe('cssFilter', function () {
       describe('when null', function () {
         it('should throw error', function () {
-          try {
-            cssFilterToSVGFilter = new CSSFilterToSVGFilter(null)
-          } catch (e) {
-            assert.equal(e.message, 'Required parameter cssFilter is null')
-          }
+          assert.throws(() => new CSSFilterToSVGFilter(null))
         })
       })
 
       describe('when undefined', function () {
         it('should throw error', function () {
-          try {
-            cssFilterToSVGFilter = new CSSFilterToSVGFilter(undefined)
-          } catch (e) {
-            assert.equal(e.message, 'Required parameter cssFilter is null')
-          }
+          assert.throws(() => new CSSFilterToSVGFilter(undefined))
         })
       })
 
@@ -92,6 +81,128 @@ describe('CSSFilterToSVGFilter', function () {
         assert.equal(typeof childObject, 'function')
       })
     })
+
+    describe('for values other than blur and drop-shadow', function () {
+      describe('when one parameter is included', function () {
+        it('returns a string', function () {
+          Object.entries(CSSFilterToSVGFilter.SVG_FILTER_TEMPLATES).forEach(([key, value]) => {
+            if (['blur', 'drop-shadow'].includes(key)) return
+            assert.equal(typeof value(1), 'string')
+          })
+        })
+      })
+
+      describe('when no parameter is included', function () {
+        it('should throw error', function () {
+          Object.entries(CSSFilterToSVGFilter.SVG_FILTER_TEMPLATES).forEach(([key, value]) => {
+            if (['blur', 'drop-shadow'].includes(key)) return
+
+            assert.throws(() => value())
+          })
+        })
+      })
+    })
+
+    describe('for blur', function () {
+      const radius = 1
+
+      describe('when one parameter is included', function () {
+        it('returns a string', function () {
+          assert.equal(typeof CSSFilterToSVGFilter.SVG_FILTER_TEMPLATES.blur({ radius }), 'string')
+        })
+
+        describe('optional function parameter edgeMode', function () {
+          const defaultEdgeMode = 'none'
+
+          it('should default to \'none\'', function () {
+            assert.equal(
+              CSSFilterToSVGFilter.SVG_FILTER_TEMPLATES.blur({ radius }),
+              CSSFilterToSVGFilter.SVG_FILTER_TEMPLATES.blur({ radius, edgeMode: defaultEdgeMode })
+            )
+          })
+        })
+      })
+
+      describe('when two parameters are included', function () {
+        const edgeMode = 'duplicate'
+
+        it('returns a string', function () {
+          assert.equal(
+            typeof CSSFilterToSVGFilter.SVG_FILTER_TEMPLATES.blur({ radius, edgeMode }),
+            'string'
+          )
+        })
+
+        describe('optional function parameter edgeMode', function () {
+          it('should not match default', function () {
+            assert.notEqual(
+              CSSFilterToSVGFilter.SVG_FILTER_TEMPLATES.blur({ radius }),
+              CSSFilterToSVGFilter.SVG_FILTER_TEMPLATES.blur({ radius, edgeMode })
+            )
+          })
+        })
+      })
+
+      describe('when no parameter is included', function () {
+        it('should throw error', function () {
+          assert.throws(() => CSSFilterToSVGFilter.SVG_FILTER_TEMPLATES.blur())
+        })
+      })
+    })
+
+    describe('for drop-shadow', function () {
+      const alphaChannelOfInput = 1
+      const radius = 2
+      const offsetX = 3
+      const offsetY = 4
+      const color = 5
+
+      describe('when less than 5 parameters are included', function () {
+        it('should throw error', function () {
+          assert.throws(() => CSSFilterToSVGFilter.SVG_FILTER_TEMPLATES['drop-shadow']({}))
+          assert.throws(() => {
+            CSSFilterToSVGFilter.SVG_FILTER_TEMPLATES['drop-shadow']({
+              alphaChannelOfInput
+            })
+          })
+          assert.throws(() => {
+            CSSFilterToSVGFilter.SVG_FILTER_TEMPLATES['drop-shadow']({
+              alphaChannelOfInput,
+              radius
+            })
+          })
+          assert.throws(() => {
+            CSSFilterToSVGFilter.SVG_FILTER_TEMPLATES['drop-shadow']({
+              alphaChannelOfInput,
+              radius,
+              offsetX
+            })
+          })
+          assert.throws(() => {
+            CSSFilterToSVGFilter.SVG_FILTER_TEMPLATES['drop-shadow']({
+              alphaChannelOfInput,
+              radius,
+              offsetX,
+              offsetY
+            })
+          })
+        })
+      })
+
+      describe('when five parameters are included', function () {
+        it('returns a string', function () {
+          const dropShadow = CSSFilterToSVGFilter.SVG_FILTER_TEMPLATES['drop-shadow']({
+            alphaChannelOfInput,
+            radius,
+            offsetX,
+            offsetY,
+            color
+          })
+
+          assert.equal(typeof dropShadow, 'string')
+        })
+      })
+    })
   })
 
   describe('toCSSFilterObject()', function () {
@@ -127,94 +238,6 @@ describe('CSSFilterToSVGFilter', function () {
           assert.equal(Object.keys(childObject).includes('original'), true)
           assert.equal(Object.keys(childObject).includes('processed'), true)
         })
-
-        describe('with a percentage value', function () {
-          describe('of 100%', function () {
-            const filterFunctionValue = '100%'
-            const processedValue = 1
-            const cssFilter = `filter: function(${filterFunctionValue});`
-
-            beforeEach(function () {
-              cssFilterToSVGFilter = new CSSFilterToSVGFilter(cssFilter)
-            })
-
-            it(`should have a processed key of ${processedValue}`, function () {
-              const cssFilterObject = cssFilterToSVGFilter.toCSSFilterObject()
-              const childObject = Object.values(cssFilterObject)[0]
-
-              assert.equal(childObject.processed, processedValue)
-            })
-          })
-
-          describe('of 50%', function () {
-            const filterFunctionValue = '50%'
-            const processedValue = 0.5
-            const cssFilter = `filter: function(${filterFunctionValue});`
-
-            beforeEach(function () {
-              cssFilterToSVGFilter = new CSSFilterToSVGFilter(cssFilter)
-            })
-
-            it(`should have a processed key of ${processedValue}`, function () {
-              const cssFilterObject = cssFilterToSVGFilter.toCSSFilterObject()
-              const childObject = Object.values(cssFilterObject)[0]
-
-              assert.equal(childObject.processed, processedValue)
-            })
-          })
-
-          describe('of 0%', function () {
-            const filterFunctionValue = '0%'
-            const processedValue = 0
-
-            beforeEach(function () {
-              cssFilterToSVGFilter = new CSSFilterToSVGFilter(
-                `filter: function(${filterFunctionValue});`
-              )
-            })
-
-            it(`should have a processed key of ${processedValue}`, function () {
-              const cssFilterObject = cssFilterToSVGFilter.toCSSFilterObject()
-              const childObject = Object.values(cssFilterObject)[0]
-
-              assert.equal(childObject.processed, processedValue)
-            })
-          })
-        })
-
-        describe('with a degree value', function () {
-          const filterFunctionValue = '100deg'
-          const processedValue = 100
-          const cssFilter = `filter: function(${filterFunctionValue});`
-
-          beforeEach(function () {
-            cssFilterToSVGFilter = new CSSFilterToSVGFilter(cssFilter)
-          })
-
-          it('should have a processed key not containing deg prefix', function () {
-            const cssFilterObject = cssFilterToSVGFilter.toCSSFilterObject()
-            const childObject = Object.values(cssFilterObject)[0]
-
-            assert.equal(childObject.processed.toString().includes('deg'), false)
-            assert.equal(childObject.processed, processedValue)
-          })
-        })
-
-        describe('with a value that\'s not a percentage or degree', function () {
-          const filterFunctionValue = '100'
-          const cssFilter = `filter: function(${filterFunctionValue});`
-
-          beforeEach(function () {
-            cssFilterToSVGFilter = new CSSFilterToSVGFilter(cssFilter)
-          })
-
-          it('should have a processed key equal to original key', function () {
-            const cssFilterObject = cssFilterToSVGFilter.toCSSFilterObject()
-            const childObject = Object.values(cssFilterObject)[0]
-
-            assert.equal(childObject.processed, childObject.original)
-          })
-        })
       })
 
       describe('optional class parameter blur', function () {
@@ -249,9 +272,6 @@ describe('CSSFilterToSVGFilter', function () {
 
             it(`should not have ${key} as key`, function () {
               const cssFilterObject = cssFilterToSVGFilter.toCSSFilterObject()
-
-              console.log(`cssFilterObject`);
-              console.dir(cssFilterObject);
 
               assert.equal(Object.keys(cssFilterObject).includes(key), false)
             })
@@ -322,8 +342,11 @@ describe('CSSFilterToSVGFilter', function () {
 
         describe('when provided', function () {
           const dropShadow = {
-            radius: 10,
-            edgeMode: 'none'
+            alphaChannelOfInput: 1,
+            radius: 2,
+            offsetX: 3,
+            offsetY: 4,
+            color: 5
           }
 
           beforeEach(function () {
@@ -429,6 +452,110 @@ describe('CSSFilterToSVGFilter', function () {
             cssFilterToSVGFilter.toSVGFilterObject().invert
           )
         })
+
+        describe('when blur is present', function () {
+          const cssFilterObject = {
+            blur: {
+              radius: 5,
+              edgeMode: 'none'
+            }
+          }
+
+          describe('optional class parameter blur', function () {
+            describe('when not provided', function () {
+              beforeEach(function () {
+                cssFilterToSVGFilter = new CSSFilterToSVGFilter(cssFilter)
+              })
+
+              it('should not be included in output', function () {
+                const svgFilterObject = cssFilterToSVGFilter.toSVGFilterObject({ cssFilterObject })
+
+                assert.equal(Object.entries(svgFilterObject).length, 0)
+              })
+            })
+
+            describe('when provided', function () {
+              const blur = {
+                radius: 10,
+                edgeMode: 'none'
+              }
+
+              beforeEach(function () {
+                cssFilterToSVGFilter = new CSSFilterToSVGFilter(cssFilter, { blur })
+              })
+
+              it('should be present as key with string value', function () {
+                const svgFilterObject = cssFilterToSVGFilter.toSVGFilterObject({ cssFilterObject })
+
+                assert.equal(typeof svgFilterObject.blur, 'string')
+              })
+            })
+          })
+        })
+        describe('when drop-shadow is present', function () {
+          const cssFilterObject = {
+            'drop-shadow': {
+              alphaChannelOfInput: 1,
+              radius: 2,
+              offsetX: 3,
+              offsetY: 4,
+              color: 5
+            }
+          }
+
+          describe('optional class parameter dropShadow', function () {
+            describe('when not provided', function () {
+              beforeEach(function () {
+                cssFilterToSVGFilter = new CSSFilterToSVGFilter(cssFilter)
+              })
+
+              it('should not be included in output', function () {
+                const svgFilterObject = cssFilterToSVGFilter.toSVGFilterObject({ cssFilterObject })
+
+                assert.equal(Object.entries(svgFilterObject).length, 0)
+              })
+            })
+
+            describe('when provided', function () {
+              const dropShadow = {
+                alphaChannelOfInput: 1,
+                radius: 2,
+                offsetX: 3,
+                offsetY: 4,
+                color: 5
+              }
+
+              beforeEach(function () {
+                cssFilterToSVGFilter = new CSSFilterToSVGFilter(cssFilter, { dropShadow })
+              })
+
+              it('should be present as key with string value', function () {
+                const svgFilterObject = cssFilterToSVGFilter.toSVGFilterObject({ cssFilterObject })
+
+                assert.equal(typeof svgFilterObject['drop-shadow'], 'string')
+              })
+            })
+          })
+        })
+
+        // describe('when drop-shadow is present', function () {
+        //   it('should pass through value unchanged', function () {
+        //     const cssFilterObject = {
+        //       'drop-shadow': {
+        //         alphaChannelOfInput: '',
+        //         radius: '',
+        //         offsetX: '',
+        //         offsetY: '',
+        //         color: ''
+        //       }
+        //     }
+
+        //     assert.notEqual(
+        //       cssFilterToSVGFilter.toSVGFilterObject({ cssFilterObject }),
+        //       cssFilterObject
+        //     )
+        //   })
+        // })
       })
     })
   })
@@ -601,10 +728,84 @@ describe('CSSFilterToSVGFilter', function () {
             cssFilterToSVGFilter.toSVG()
           )
 
-          const invertSVGFilterTemplate = CSSFilterToSVGFilter.SVG_FILTER_TEMPLATES['invert']['template'];
+          const invertSVGFilterTemplate = CSSFilterToSVGFilter.SVG_FILTER_TEMPLATES.invert.template
 
           console.dir(invertSVGFilterTemplate)
         })
+      })
+    })
+  })
+
+  describe('computeFilterValue()', function () {
+    const cssFilter = 'filter: invert(50%);'
+
+    beforeEach(function () {
+      cssFilterToSVGFilter = new CSSFilterToSVGFilter(cssFilter)
+    })
+
+    describe('with a value containing \'%\'', function () {
+      describe('when an integer can be parsed', function () {
+        describe('of 100%', function () {
+          const inputValue = '100%'
+          const expectedValue = 1
+
+          it(`should return ${expectedValue}`, function () {
+            assert.equal(cssFilterToSVGFilter.computeFilterValue(inputValue), expectedValue)
+          })
+        })
+
+        describe('of 50%', function () {
+          const inputValue = '50%'
+          const expectedValue = 0.5
+
+          it(`should return ${expectedValue}`, function () {
+            assert.equal(cssFilterToSVGFilter.computeFilterValue(inputValue), expectedValue)
+          })
+        })
+
+        describe('of 0%', function () {
+          const inputValue = '0%'
+          const expectedValue = 0
+
+          it(`should return ${expectedValue}`, function () {
+            assert.equal(cssFilterToSVGFilter.computeFilterValue(inputValue), expectedValue)
+          })
+        })
+      })
+
+      describe('when an integer can not be parsed', function () {
+        const inputValue = 'notAnInteger%'
+
+        it('should return the same value unchanged', function () {
+          assert.equal(cssFilterToSVGFilter.computeFilterValue(inputValue), inputValue)
+        })
+      })
+    })
+
+    describe('with a value containing \'deg\'', function () {
+      describe('when an integer can be parsed', function () {
+        const inputValue = '100deg'
+        const expectedValue = 100
+
+        it(`should return ${expectedValue} not containing deg prefix`, function () {
+          assert.equal(cssFilterToSVGFilter.computeFilterValue(inputValue), expectedValue)
+        })
+      })
+
+      describe('when an integer can not be parsed', function () {
+        const inputValue = 'notAnIntegerdeg'
+
+        it('should return the same value unchanged', function () {
+          assert.equal(cssFilterToSVGFilter.computeFilterValue(inputValue), inputValue)
+        })
+      })
+    })
+
+    describe('with a value that\'s not a percentage or degree', function () {
+      const inputValue = '100'
+
+      it('should return the same value unchanged', function () {
+        assert.equal(cssFilterToSVGFilter.computeFilterValue(inputValue), inputValue)
       })
     })
   })

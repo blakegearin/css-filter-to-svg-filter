@@ -1,11 +1,11 @@
 {
-  "name": "css-filter-to-svg-filter",
+  "name": "@blakegearin/css-filter-to-svg-filter",
   "version": "0.1.0",
   "description": "Converts CSS filters to SVG filters",
   "type": "module",
   "main": "src/index.js",
   "scripts": {
-    "test": "mocha",
+    "test": "c8 mocha --recursive './test/*.spec.js' --require esm",
     "lint": "standard"
   },
   "standard": {
@@ -23,18 +23,23 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/blakegearin/css-filter-to-svg-filter.git"
+    "url": "git+https://github.com/blakegearin/css-filter-to-svg-filter.git"
   },
-  "bugs": "https://github.com/blakegearin/css-filter-to-svg-filter/issues",
-  "author": {
-    "name": "Blake Gearin",
-    "email": "blakegearin@pm.me",
-    "url": "https://blakegearin.com"
+  "bugs": {
+    "url": "https://github.com/blakegearin/css-filter-to-svg-filter/issues"
   },
+  "author": "Blake Gearin <blakegearin@pm.me> (https://blakegearin.com)",
   "license": "MIT",
   "devDependencies": {
+    "c8": "^7.12.0",
+    "esm": "^3.2.25",
     "mocha": "^10.0.0",
     "standard": "^17.0.0"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "homepage": "https://github.com/blakegearin/css-filter-to-svg-filter#readme",
+  "directories": {
+    "src": "src",
+    "test": "test"
+  }
 }
