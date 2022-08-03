@@ -1,5 +1,13 @@
 # CSS Filter to SVG Filter
 
+![Tests](https://img.shields.io/badge/tests-mocha-brightgreen)
+![Statements](https://img.shields.io/badge/statements-100%25-brightgreen.svg?style=flat)
+![Branches](https://img.shields.io/badge/branches-100%25-brightgreen.svg?style=flat)
+![Functions](https://img.shields.io/badge/functions-100%25-brightgreen.svg?style=flat)
+![Lines](https://img.shields.io/badge/lines-100%25-brightgreen.svg?style=flat)
+[![javascript style guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+[![MIT license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 ## Getting Started
 
 Install: `$ npm install css-filter-to-svg-filter`
@@ -190,7 +198,3 @@ const customConverter = new CSSFilterToSVGFilter(cssFilter, params);
 - [CSS filter property](https://developer.mozilla.org/en-US/docs/Web/CSS/filter)
 - [SVG filter element](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/filter)
 - [SVG filter templates](https://www.w3.org/TR/filter-effects-1/#FilterPrimitiveRepresentation)
-
-## License
-
-[MIT](LICENSE)

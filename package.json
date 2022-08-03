@@ -5,8 +5,9 @@
   "type": "module",
   "main": "src/index.js",
   "scripts": {
-    "test": "c8 mocha --recursive './test/*.spec.js' --require esm",
-    "lint": "standard"
+    "test": "c8 mocha --recursive './test/*.spec.js' --require esm && npm run --silent make-badges",
+    "lint": "standard",
+    "make-badges": "c8 report --reporter=json-summary && istanbul-badges-readme --silent"
   },
   "standard": {
     "env": [
@@ -33,6 +34,7 @@
   "devDependencies": {
     "c8": "^7.12.0",
     "esm": "^3.2.25",
+    "istanbul-badges-readme": "^1.8.2",
     "mocha": "^10.0.0",
     "standard": "^17.0.0"
   },
