@@ -1,6 +1,6 @@
 {
-  "name": "@blakegearin/css-filter-to-svg-filter",
-  "version": "0.1.0",
+  "name": "css-filter-to-svg-filter",
+  "version": "1.0.0",
   "description": "Converts CSS filters to SVG filters",
   "type": "module",
   "main": "src/index.js",
@@ -31,6 +31,7 @@
   },
   "author": "Blake Gearin <blakegearin@pm.me> (https://blakegearin.com)",
   "license": "MIT",
+  "dependencies": {},
   "devDependencies": {
     "c8": "^7.12.0",
     "esm": "^3.2.25",
@@ -38,10 +39,8 @@
     "mocha": "^10.0.0",
     "standard": "^17.0.0"
   },
-  "dependencies": {},
   "homepage": "https://github.com/blakegearin/css-filter-to-svg-filter#readme",
   "directories": {
-    "src": "src",
     "test": "test"
   }
 }

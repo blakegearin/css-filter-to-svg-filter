@@ -1,18 +1,19 @@
-# CSS Filter to SVG Filter
-
-![Tests](https://img.shields.io/badge/tests-mocha-brightgreen)
+[![npm version](https://badge.fury.io/js/css-filter-to-svg-filter.svg)](http://badge.fury.io/js/css-filter-to-svg-filter)
+![Tests](https://img.shields.io/badge/tests-mocha-8d6748)
 ![Statements](https://img.shields.io/badge/statements-100%25-brightgreen.svg?style=flat)
 ![Branches](https://img.shields.io/badge/branches-100%25-brightgreen.svg?style=flat)
 ![Functions](https://img.shields.io/badge/functions-100%25-brightgreen.svg?style=flat)
 ![Lines](https://img.shields.io/badge/lines-100%25-brightgreen.svg?style=flat)
-[![javascript style guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+[![javascript style guide](https://img.shields.io/badge/code_style-standard-f3df49.svg)](https://standardjs.com)
 [![MIT license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
+# css-filter-to-svg-filter
 
 ## Getting Started
 
 Install: `$ npm install css-filter-to-svg-filter`
 
-Import: `import CSSFilterToSVGFilter from '@blakegearin/css-filter-to-svg-filter';`
+Import: `import CSSFilterToSVGFilter from 'css-filter-to-svg-filter';`
 
 ## Usage
 
