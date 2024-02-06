@@ -31,7 +31,6 @@
   },
   "author": "Blake Gearin <blakegearin@pm.me> (https://blakegearin.com)",
   "license": "MIT",
-  "dependencies": {},
   "devDependencies": {
     "c8": "^7.12.0",
     "esm": "^3.2.25",
