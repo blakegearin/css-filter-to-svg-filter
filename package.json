@@ -1,6 +1,6 @@
 {
   "name": "css-filter-to-svg-filter",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Converts CSS filters to SVG filters",
   "type": "module",
   "main": "src/index.js",
