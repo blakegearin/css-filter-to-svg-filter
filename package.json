@@ -29,7 +29,7 @@
   "bugs": {
     "url": "https://github.com/blakegearin/css-filter-to-svg-filter/issues"
   },
-  "author": "Blake Gearin <blakegearin@pm.me> (https://blakegearin.com)",
+  "author": "Blake Gearin <hello@blakeg.me> (https://blakegearin.com)",
   "license": "MIT",
   "devDependencies": {
     "c8": "^7.12.0",
